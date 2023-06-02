@@ -26,7 +26,7 @@ import {
 } from "webgi";
 import "./styles.css";
 
-async function setupViewer(){
+async function setupViewer() {
 
     // Initialize the viewer
     const viewer = new ViewerApp({
@@ -63,7 +63,8 @@ async function setupViewer(){
     // This must be called once after all plugins are added.
     viewer.renderer.refreshPipeline()
 
-    await manager.addFromPath("./assets/classic-watch.glb")
+    await manager.addFromPath("./assets/head_005_10_1.glb")
+    await manager.addFromPath("./assets/shank_005_00_56.glb")
 
     // Load an environment map if not set in the glb file
     // await viewer.scene.setEnvironment(
@@ -71,6 +72,13 @@ async function setupViewer(){
     //         "./assets/environment.hdr"
     //     )
     // );
+
+    let hdr = await manager.importer!.importSinglePath("https://dist.pixotronics.com/webgi/assets/hdr/gem_2.hdr.png?v=1");
+    await viewer.scene.setEnvironment(hdr);
+
+    const diamondPlugin = await viewer.getPlugin(DiamondPlugin);
+    const diamondEnvMap = await manager.importer!.importSinglePath<ITexture>('https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr')
+    diamondPlugin.envMap = diamondEnvMap
 
     // Add some UI for tweak and testing.
     const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin)
